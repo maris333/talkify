@@ -14,11 +14,11 @@ def index():
 
         translated_text = translate_text(text_to_convert, source_language, target_language)
 
-        response, s3_client = get_translated_text(translated_text)
+        response = get_translated_text(translated_text)
 
         output_file = save_file(response)
 
-        upload_file(output_file, s3_client)
+        upload_file(output_file)
 
         return f'MP3 file was converted and saved: s3://{s3_bucket_name}/{output_file}'
 

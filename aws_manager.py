@@ -7,7 +7,9 @@ aws_region = config('aws_region')
 s3_bucket_name = config('s3_bucket_name')
 
 
-def upload_file(output_file, s3_client):
+def upload_file(output_file):
+    s3_client = boto3.client('s3', aws_access_key_id=aws_access_key_id, aws_secret_access_key=aws_secret_access_key,
+                             region_name=aws_region)
     s3_client.upload_file(output_file, s3_bucket_name, output_file)
 
 
@@ -35,13 +37,10 @@ def get_translated_text(translated_text):
     polly_client = boto3.client('polly', aws_access_key_id=aws_access_key_id,
                                 aws_secret_access_key=aws_secret_access_key, region_name=aws_region)
 
-    s3_client = boto3.client('s3', aws_access_key_id=aws_access_key_id, aws_secret_access_key=aws_secret_access_key,
-                             region_name=aws_region)
-
     response = polly_client.synthesize_speech(
         Text=translated_text,
         OutputFormat='mp3',
         VoiceId='Joanna'
     )
 
-    return response, s3_client
+    return response
