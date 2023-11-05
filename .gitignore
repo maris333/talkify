@@ -1,3 +1,4 @@
 .idea/
 .env
 output.mp3
+__pycache__/

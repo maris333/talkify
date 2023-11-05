@@ -4,9 +4,19 @@
     <title>Text to Speech Conversion</title>
 </head>
 <body>
-    <h1>Text to Speech Conversion</h1>
+    <h1>Text to Speech Conversion with Translation</h1>
     <form method="post">
         <textarea name="text_to_convert" rows="4" cols="50" placeholder="Enter text to convert to speech..."></textarea><br><br>
+        <label for="source_language">Select Source Language:</label>
+        <select name="source_language" id="source_language">
+            <option value="en">English</option>
+            <option value="pl">Polish</option>
+        </select><br><br>
+        <label for="target_language">Select Target Language:</label>
+        <select name="target_language" id="target_language">
+            <option value="en">English</option>
+            <option value="pl">Polish</option>
+        </select><br><br>
         <input type="submit" value="Convert and Save to S3">
     </form>
 </body>
