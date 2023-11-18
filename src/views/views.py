@@ -1,6 +1,6 @@
 from flask import request, render_template, Blueprint
 
-from aws_manager import s3_bucket_name, upload_file, save_file, translate_text, get_translated_text
+from src.aws.manager import S3_BUCKET_NAME, upload_file, save_file, translate_text, get_translated_text
 
 index_blueprint = Blueprint("index", __name__)
 
@@ -20,6 +20,8 @@ def index():
 
         upload_file(output_file)
 
-        return f'MP3 file was converted and saved: s3://{s3_bucket_name}/{output_file}'
+        return f'MP3 file was converted and saved: s3://{S3_BUCKET_NAME}/{output_file}'
 
     return render_template('index.html')
+
+
