@@ -1,23 +1,17 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Text to Speech Conversion</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registration and Login</title>
 </head>
 <body>
-    <h1>Text to Speech Conversion with Translation</h1>
-    <form method="post">
-        <textarea name="text_to_convert" rows="4" cols="50" placeholder="Enter text to convert to speech..."></textarea><br><br>
-        <label for="source_language">Select Source Language:</label>
-        <select name="source_language" id="source_language">
-            <option value="en">English</option>
-            <option value="pl">Polish</option>
-        </select><br><br>
-        <label for="target_language">Select Target Language:</label>
-        <select name="target_language" id="target_language">
-            <option value="en">English</option>
-            <option value="pl">Polish</option>
-        </select><br><br>
-        <input type="submit" value="Convert and Save to S3">
-    </form>
+    <header>
+        <h1>Welcome to the Text-to-Speech Conversion App</h1>
+        <nav>
+            <a href="{{ url_for('login.login') }}">Login</a>
+            <a href="{{ url_for('register.register') }}">Register</a>
+        </nav>
+    </header>
 </body>
 </html>
