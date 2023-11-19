@@ -1,7 +1,7 @@
 from flask import request, render_template, Blueprint, redirect, url_for
 from flask_login import login_required, login_user, logout_user
 
-from src import db
+
 from src.aws.manager import S3_BUCKET_NAME, upload_file, save_file, translate_text, get_translated_text
 
 
@@ -35,14 +35,16 @@ def index():
 
 @register_blueprint.route('/register', methods=['GET', 'POST'])
 def register():
-    from src.forms.auth import RegistrationForm, User
+    from src.forms.auth import RegistrationForm
+    from src import db
+    from src.models.auth import User
     form = RegistrationForm()
 
     if form.validate_on_submit():
         new_user = User(username=form.username.data, password=form.password.data)
         db.session.add(new_user)
         db.session.commit()
-        return redirect(url_for('login'))
+        return redirect(url_for('login.login'))
 
     return render_template('register.html', form=form)
 
@@ -50,15 +52,15 @@ def register():
 @login_blueprint.route('/login', methods=['GET', 'POST'])
 def login():
     from src.forms.auth import LoginForm
+    from src.models.auth import User
     form = LoginForm()
 
     if form.validate_on_submit():
-        from src.models.auth import User
         user = User.query.filter_by(username=form.username.data).first()
 
         if user and user.password == form.password.data:
             login_user(user)
-            return redirect(url_for('translate'))
+            return redirect(url_for('translate.index'))
         else:
             return render_template('login.html', form=form, error='Invalid credentials')
 

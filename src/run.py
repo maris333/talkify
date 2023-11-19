@@ -1,26 +1,18 @@
-from flask import Flask
-from flask_login import LoginManager
-from flask_migrate import Migrate
-from flask_sqlalchemy import SQLAlchemy
-
-app = Flask(__name__)
-app.config['SECRET_KEY'] = 'your_secret_key'
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///site.db'
-db = SQLAlchemy()
-login_manager = LoginManager(app)
-login_manager.login_view = 'login'
-migrate = Migrate(app, db)
 
 
-@login_manager.user_loader
-def load_user(user_id):
-    from src.models.auth import User
-    return User.get(user_id)
 
 
-def create_app():
+
+
+
+
+
+
+if __name__ == '__main__':
     from src.views.views import index_blueprint, register_blueprint, login_blueprint, logout_blueprint, \
         translate_blueprint
+    from src import app, db
+
     with app.app_context():
         app.register_blueprint(index_blueprint)
         app.register_blueprint(register_blueprint)
@@ -28,10 +20,5 @@ def create_app():
         app.register_blueprint(logout_blueprint)
         app.register_blueprint(translate_blueprint)
         db.init_app(app)
-
-
-    return app
-
-
-if __name__ == '__main__':
-    create_app().run(debug=True, port=4000)
+        db.create_all()
+    app.run(debug=True, port=4000)
