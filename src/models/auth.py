@@ -8,7 +8,6 @@ class User(db.Model, UserMixin):
     username = db.Column(db.String(20), unique=True, nullable=False)
     password = db.Column(db.String(60), nullable=False)
 
-    # Flask-Login required methods
     def get_id(self):
         return str(self.id)
 

@@ -4,7 +4,6 @@ from flask_migrate import Migrate
 from flask_sqlalchemy import SQLAlchemy
 
 
-
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'your_secret_key'
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///site.db'
@@ -12,12 +11,6 @@ db = SQLAlchemy()
 login_manager = LoginManager(app)
 login_manager.login_view = 'login'
 migrate = Migrate(app, db)
-
-
-
-
-
-
 
 
 @login_manager.user_loader
@@ -36,8 +29,7 @@ def create_app():
         app.register_blueprint(logout_blueprint)
         app.register_blueprint(translate_blueprint)
         db.init_app(app)
-
-
+        db.create_all()
     return app
 
 
