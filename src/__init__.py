@@ -20,8 +20,9 @@ def load_user(user_id):
 
 
 def create_app():
-    from src.views.views import index_blueprint, register_blueprint, login_blueprint, logout_blueprint, \
-        translate_blueprint
+    from src.views.main import index_blueprint, translate_blueprint
+    from src.views.auth import register_blueprint, login_blueprint, logout_blueprint
+
     with app.app_context():
         app.register_blueprint(index_blueprint)
         app.register_blueprint(register_blueprint)
