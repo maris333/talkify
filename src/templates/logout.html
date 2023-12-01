@@ -6,8 +6,13 @@
     <title>Logout</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
 </head>
+ <header>
+        <nav>
+            <a href="{{ url_for('index.index') }}">Back to main page</a>
+        </nav>
+    </header>
 <body>
     <h2>Logout</h2>
-    <p>You have been successfully logged out. Click <a href="{{ url_for('index.index') }}">here</a> to log in again or register.</p>
+    <p>You have been successfully logged out.</p>
 </body>
 </html>
