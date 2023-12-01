@@ -2,14 +2,12 @@ import random
 import string
 
 import boto3
-from botocore.exceptions import NoCredentialsError
-from botocore.signers import generate_presigned_url
 from flask import request, render_template, Blueprint, redirect
 from flask_login import login_required, current_user
 
 from src import db
 from src.aws.manager import upload_file, save_file, translate_text, get_translated_text, delete_file
-from src.config import AWS_ACCESS_KEY_ID, AWS_SECRET_KEY_ACCESS, AWS_REGION
+from src.config import AWS_ACCESS_KEY_ID, AWS_SECRET_KEY_ACCESS, AWS_REGION, S3_BUCKET_NAME
 from src.models.auth import Files
 
 translate_blueprint = Blueprint("translate", __name__)
@@ -66,7 +64,7 @@ def download_file(filename):
     if file_record:
         s3 = boto3.client('s3', aws_access_key_id=AWS_ACCESS_KEY_ID, aws_secret_access_key=AWS_SECRET_KEY_ACCESS,
                           region_name=AWS_REGION, config=boto3.session.Config(signature_version='s3v4'))
-        bucket_name = 'maris333'
+        bucket_name = S3_BUCKET_NAME
         object_key = f'src/files/{filename}.mp3'
 
         presigned_url = s3.generate_presigned_url(
@@ -76,4 +74,4 @@ def download_file(filename):
         )
         return redirect(presigned_url)
 
-    return "Unauthorized access."
+    return "Unauthorized access.", 403
