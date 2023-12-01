@@ -4,15 +4,15 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
 </head>
 <body>
     <header>
-        <h2>Welcome, {{ current_user.username }}!</h2>
-        {% if msg %}
-            <button onclick="window.location.href='{{ msg}}'">
-                View MP3 file
-            </button>
-        {% endif %}
+        <nav>
+            {% if current_user.is_authenticated %}
+            <a href="{{ url_for('download.download') }}">View MP3 files</a>
+            {% endif %}
+        </nav>
         <nav>
             {% if current_user.is_authenticated %}
                 <a href="{{ url_for('logout.logout') }}">Logout</a>
@@ -22,11 +22,9 @@
             {% endif %}
         </nav>
     </header>
-
     {% if current_user.is_authenticated %}
         <div>
-            <!-- Content visible only when logged in -->
-            <h3>Text to Speech Conversion with Translation</h3>
+            <h2>Text to Speech Conversion with Translation</h2>
             <form method="post">
                 <textarea name="text_to_convert" rows="4" cols="50" placeholder="Enter text to convert to speech..."></textarea><br><br>
                 <label for="source_language">Select Source Language:</label>

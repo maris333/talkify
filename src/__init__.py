@@ -20,7 +20,7 @@ def load_user(user_id):
 
 
 def create_app():
-    from src.views.main import index_blueprint, translate_blueprint
+    from src.views.main import index_blueprint, translate_blueprint, download_blueprint, download_file_blueprint
     from src.views.auth import register_blueprint, login_blueprint, logout_blueprint
 
     with app.app_context():
@@ -29,6 +29,8 @@ def create_app():
         app.register_blueprint(login_blueprint)
         app.register_blueprint(logout_blueprint)
         app.register_blueprint(translate_blueprint)
+        app.register_blueprint(download_blueprint)
+        app.register_blueprint(download_file_blueprint)
         db.init_app(app)
         db.create_all()
     return app

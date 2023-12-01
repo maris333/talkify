@@ -4,8 +4,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
 </head>
 <body>
+    <header>
+        <nav>
+            <a href="{{ url_for('index.index') }}">Go back</a>
+        </nav>
+    </header>
     <h2>Login</h2>
     {% if error %}
         <p style="color: red;">{{ error }}</p>

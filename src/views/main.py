@@ -1,15 +1,21 @@
 import random
 import string
 
-from flask import request, render_template, Blueprint
+import boto3
+from botocore.exceptions import NoCredentialsError
+from botocore.signers import generate_presigned_url
+from flask import request, render_template, Blueprint, redirect
 from flask_login import login_required, current_user
 
 from src import db
 from src.aws.manager import upload_file, save_file, translate_text, get_translated_text, delete_file
+from src.config import AWS_ACCESS_KEY_ID, AWS_SECRET_KEY_ACCESS, AWS_REGION
 from src.models.auth import Files
 
 translate_blueprint = Blueprint("translate", __name__)
 index_blueprint = Blueprint("index", __name__)
+download_blueprint = Blueprint("download", __name__)
+download_file_blueprint = Blueprint("download_file", __name__)
 
 
 @index_blueprint.route('/', methods=['GET', 'POST'])
@@ -42,4 +48,32 @@ def translate():
     upload_file(output_file)
     delete_file(filename)
 
-    return render_template("translate.html", msg=f'https://s3.console.aws.amazon.com/s3/object/maris333?region=eu-north-1&prefix={output_file}')
+    return render_template("translate.html")
+
+
+@download_blueprint.route('/download', methods=['GET'])
+@login_required
+def download():
+    user_files = Files.query.filter_by(user_id=current_user.id).all()
+    return render_template('download.html', user_files=user_files)
+
+
+@download_file_blueprint.route('/download/<filename>', methods=['GET'])
+@login_required
+def download_file(filename):
+    file_record = Files.query.filter_by(user_id=current_user.id, filename=filename).first()
+
+    if file_record:
+        s3 = boto3.client('s3', aws_access_key_id=AWS_ACCESS_KEY_ID, aws_secret_access_key=AWS_SECRET_KEY_ACCESS,
+                          region_name=AWS_REGION, config=boto3.session.Config(signature_version='s3v4'))
+        bucket_name = 'maris333'
+        object_key = f'src/files/{filename}.mp3'
+
+        presigned_url = s3.generate_presigned_url(
+            'get_object',
+            Params={'Bucket': bucket_name, 'Key': object_key},
+            ExpiresIn=3600
+        )
+        return redirect(presigned_url)
+
+    return "Unauthorized access."
