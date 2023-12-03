@@ -11,7 +11,7 @@ login_blueprint = Blueprint("login", __name__)
 logout_blueprint = Blueprint("logout", __name__)
 
 
-@register_blueprint.route('/register', methods=['GET', 'POST'])
+@register_blueprint.route("/register", methods=["GET", "POST"])
 def register():
     form = RegistrationForm()
 
@@ -19,12 +19,12 @@ def register():
         new_user = User(username=form.username.data, password=form.password.data)
         db.session.add(new_user)
         db.session.commit()
-        return redirect(url_for('login.login'))
+        return redirect(url_for("login.login"))
 
-    return render_template('register.html', form=form)
+    return render_template("register.html", form=form)
 
 
-@login_blueprint.route('/login', methods=['GET', 'POST'])
+@login_blueprint.route("/login", methods=["GET", "POST"])
 def login():
     form = LoginForm()
 
@@ -33,14 +33,14 @@ def login():
 
         if user and user.password == form.password.data:
             login_user(user)
-            return redirect(url_for('translate.translate'))
-        return render_template('login.html', form=form, error='Invalid credentials')
+            return redirect(url_for("translate.translate"))
+        return render_template("login.html", form=form, error="Invalid credentials")
 
-    return render_template('login.html', form=form, error=None)
+    return render_template("login.html", form=form, error=None)
 
 
-@logout_blueprint.route('/logout', methods=['GET', 'POST'])
+@logout_blueprint.route("/logout", methods=["GET", "POST"])
 @login_required
 def logout():
     logout_user()
-    return render_template('logout.html')
+    return render_template("logout.html")
