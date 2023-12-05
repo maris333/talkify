@@ -1,3 +1,8 @@
+"""
+This module contains routes and functions for a Flask application that utilizes AWS services
+for file management and translation functionalities.
+"""
+
 import random
 import string
 
@@ -29,12 +34,24 @@ download_file_blueprint = Blueprint("download_file", __name__)
 
 @index_blueprint.route("/", methods=["GET", "POST"])
 def index():
+    """
+    Route for the home page.
+
+    Returns:
+    - str: The rendered HTML for the home page.
+    """
     return render_template("index.html")
 
 
 @translate_blueprint.route("/translate", methods=["GET", "POST"])
 @login_required
 def translate():
+    """
+    Route for translating text.
+
+    Returns:
+    - str: The rendered HTML for the translation page.
+    """
     if request.method == "GET":
         return render_template("translate.html")
 
@@ -63,6 +80,12 @@ def translate():
 @download_blueprint.route("/download", methods=["GET"])
 @login_required
 def download():
+    """
+    Route for displaying a user's files for download.
+
+    Returns:
+    - str: The rendered HTML for the download page.
+    """
     user_files = Files.query.filter_by(user_id=current_user.id).all()
     return render_template("download.html", user_files=user_files)
 
@@ -70,6 +93,15 @@ def download():
 @download_file_blueprint.route("/download/<filename>", methods=["GET"])
 @login_required
 def download_file(filename):
+    """
+    Route for downloading a specific file.
+
+    Parameters:
+    - filename (str): The filename to be downloaded.
+
+    Returns:
+    - str or redirect: Either a redirect to the presigned URL for the file or an error message.
+    """
     file_record = Files.query.filter_by(
         user_id=current_user.id, filename=filename
     ).first()

@@ -1,7 +1,5 @@
 import os
-
 import boto3
-
 from src.config import (
     AWS_ACCESS_KEY_ID,
     AWS_SECRET_KEY_ACCESS,
@@ -12,10 +10,13 @@ from src.config import (
 
 def upload_file(output_file):
     """
-    This functions allows us to upload file to AWS S3 bucket.
+    Uploads a file to an AWS S3 bucket.
 
-    :param output_file:
-    :return:
+    Parameters:
+    - output_file (str): The local file path to be uploaded.
+
+    Returns:
+    - None
     """
     s3_client = boto3.client(
         "s3",
@@ -27,6 +28,16 @@ def upload_file(output_file):
 
 
 def save_file(response, filename):
+    """
+    Saves the audio response from AWS Polly to a local file.
+
+    Parameters:
+    - response (dict): The AWS Polly response containing an "AudioStream".
+    - filename (str): The desired filename for the saved file.
+
+    Returns:
+    - str: The local file path where the file is saved.
+    """
     output_file = f"src/files/{filename}.mp3"
     with open(output_file, "wb") as f:
         f.write(response["AudioStream"].read())
@@ -34,6 +45,15 @@ def save_file(response, filename):
 
 
 def delete_file(filename):
+    """
+    Deletes a local file.
+
+    Parameters:
+    - filename (str): The filename to be deleted.
+
+    Returns:
+    - None
+    """
     output_file = f"src/files/{filename}.mp3"
     try:
         os.remove(output_file)
@@ -44,6 +64,17 @@ def delete_file(filename):
 
 
 def translate_text(text, source_language, target_language):
+    """
+    Translates text from a source language to a target language using AWS Translate.
+
+    Parameters:
+    - text (str): The text to be translated.
+    - source_language (str): The source language code.
+    - target_language (str): The target language code.
+
+    Returns:
+    - str: The translated text.
+    """
     translate_client = boto3.client(
         "translate",
         aws_access_key_id=AWS_ACCESS_KEY_ID,
@@ -61,6 +92,15 @@ def translate_text(text, source_language, target_language):
 
 
 def get_translated_text(translated_text):
+    """
+    Synthesizes speech from translated text using AWS Polly.
+
+    Parameters:
+    - translated_text (str): The translated text.
+
+    Returns:
+    - dict: The AWS Polly response containing the synthesized speech.
+    """
     polly_client = boto3.client(
         "polly",
         aws_access_key_id=AWS_ACCESS_KEY_ID,
