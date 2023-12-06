@@ -4,7 +4,7 @@ from src import create_app, db
 from src.models.auth import User
 
 
-class TestYourApp(TestCase):
+class TestViews(TestCase):
     def create_app(self):
         app = create_app()
         app.config["TESTING"] = True
