@@ -27,10 +27,10 @@ class TestManager(unittest.TestCase):
         translate_client_mock = MagicMock()
         mock_boto_client.return_value = translate_client_mock
 
-        translate_text("Hello", "en", "es")
+        translate_text("Hello", "en", "pl")
 
         translate_client_mock.translate_text.assert_called_once_with(
-            Text="Hello", SourceLanguageCode="en", TargetLanguageCode="es"
+            Text="Hello", SourceLanguageCode="en", TargetLanguageCode="pl"
         )
 
     @patch("boto3.client")
@@ -38,10 +38,10 @@ class TestManager(unittest.TestCase):
         polly_client_mock = MagicMock()
         mock_boto_client.return_value = polly_client_mock
 
-        get_translated_text("Hola")
+        get_translated_text("Czesc")
 
         polly_client_mock.synthesize_speech.assert_called_once_with(
-            Text="Hola", OutputFormat="mp3", VoiceId="Joanna"
+            Text="Czesc", OutputFormat="mp3", VoiceId="Joanna"
         )
 
     @patch("builtins.open", create=True)

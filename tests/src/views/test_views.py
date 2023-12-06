@@ -27,7 +27,7 @@ class TestViews(TestCase):
         self.assertEqual(response.status_code, 200)
 
     def test_register_route(self):
-        data = {"username": "testuser1", "password": "testpassword1"}
+        data = {"username": "testuser", "password": "testpassword"}
         response = self.client.post("/register", data=data)
         self.assertEqual(response.status_code, 200)
 
