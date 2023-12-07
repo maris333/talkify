@@ -8,20 +8,17 @@
 </head>
 <body>
     <header>
-        <nav>
-            {% if current_user.is_authenticated %}
+    <nav>
+        {% if current_user.is_authenticated %}
             <a href="{{ url_for('download.download') }}">View MP3 files</a>
-            {% endif %}
-        </nav>
-        <nav>
-            {% if current_user.is_authenticated %}
-                <a href="{{ url_for('logout.logout') }}">Logout</a>
-            {% else %}
-                <a href="{{ url_for('login.login') }}">Login</a>
-                <a href="{{ url_for('register.register') }}">Register</a>
-            {% endif %}
-        </nav>
-    </header>
+            <a href="{{ url_for('logout.logout') }}">Logout</a>
+        {% else %}
+            <a href="{{ url_for('login.login') }}">Login</a>
+            <a href="{{ url_for('register.register') }}">Register</a>
+        {% endif %}
+    </nav>
+</header>
+
     {% if current_user.is_authenticated %}
         <div>
             <h2>Text to Speech Conversion with Translation</h2>
