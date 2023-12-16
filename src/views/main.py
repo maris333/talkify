@@ -18,13 +18,8 @@ from src.aws.manager import (
     get_translated_text,
     delete_file,
 )
-from src.config import (
-    AWS_ACCESS_KEY_ID,
-    AWS_SECRET_KEY_ACCESS,
-    AWS_REGION,
-    S3_BUCKET_NAME,
-)
-from src.models.auth import Files
+from src.config import AWSConfig
+from src.models.files import Files
 
 translate_blueprint = Blueprint("translate", __name__)
 index_blueprint = Blueprint("index", __name__)
@@ -109,12 +104,12 @@ def download_file(filename):
     if file_record:
         s3 = boto3.client(
             "s3",
-            aws_access_key_id=AWS_ACCESS_KEY_ID,
-            aws_secret_access_key=AWS_SECRET_KEY_ACCESS,
-            region_name=AWS_REGION,
+            aws_access_key_id=AWSConfig.AWS_ACCESS_KEY_ID,
+            aws_secret_access_key=AWSConfig.AWS_SECRET_KEY_ACCESS,
+            region_name=AWSConfig.AWS_REGION,
             config=boto3.session.Config(signature_version="s3v4"),
         )
-        bucket_name = S3_BUCKET_NAME
+        bucket_name = AWSConfig.S3_BUCKET_NAME
         object_key = f"src/files/{filename}.mp3"
 
         presigned_url = s3.generate_presigned_url(

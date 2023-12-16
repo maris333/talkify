@@ -26,9 +26,11 @@ class User(db.Model, UserMixin):
     password = db.Column(db.String(60), nullable=False)
     files = db.relationship("Files", backref="user", lazy=True)
 
-    def __init__(self, username, password):
+    def __init__(self, username, password, id=None):
         self.username = username
         self.password = password
+        if id is not None:
+            self.id = id
 
     def get_id(self):
         return str(self.id)
@@ -45,22 +47,3 @@ class User(db.Model, UserMixin):
 
     def is_anonymous(self):
         return False
-
-
-class Files(db.Model):
-    """
-    Files model representing files associated with users in the database.
-
-    Attributes:
-    - id (int): Primary key for the file.
-    - filename (str): Name of the file.
-    - user_id (int): Foreign key referencing the User model.
-
-    Relationships:
-    - user: Relationship to the User model.
-
-    """
-
-    id = db.Column(db.Integer, primary_key=True)
-    filename = db.Column(db.String(255), nullable=False)
-    user_id = db.Column(db.Integer, db.ForeignKey("user.id"), nullable=False)

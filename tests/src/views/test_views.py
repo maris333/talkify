@@ -1,63 +1,40 @@
-from flask_testing import TestCase
+def test_index_route(client):
+    response = client.get("/")
+    assert response.status_code == 200
 
-from src import create_app, db
-from src.models.auth import User
+
+def test_register_route(client):
+    data = {"username": "testuser", "password": "testpassword"}
+    response = client.post("/register", data=data)
+    assert response.status_code == 200
 
 
-class TestViews(TestCase):
-    def create_app(self):
-        app = create_app()
-        app.config["TESTING"] = True
-        app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///:memory:"
+def test_login_route(client):
+    data = {"username": "testuser", "password": "testpassword"}
+    response = client.post("/login", data=data)
+    assert response.status_code == 302
 
-        return app
 
-    def setUp(self):
-        db.create_all()
-        test_user = User(username="testuser", password="testpassword")
-        db.session.add(test_user)
-        db.session.commit()
+def test_logout_route(client):
+    response = client.get("/logout")
+    assert response.status_code == 302
 
-    def tearDown(self):
-        db.session.remove()
-        db.drop_all()
 
-    def test_index_route(self):
-        response = self.client.get("/")
-        self.assertEqual(response.status_code, 200)
+def test_translate_route(client):
+    client.post("/login", data={"username": "testuser", "password": "testpassword"})
+    response = client.get("/translate")
+    assert response.status_code == 200
 
-    def test_register_route(self):
-        data = {"username": "testuser", "password": "testpassword"}
-        response = self.client.post("/register", data=data)
-        self.assertEqual(response.status_code, 200)
 
-    def test_login_route(self):
-        data = {"username": "testuser", "password": "testpassword"}
-        response = self.client.post("/login", data=data)
-        self.assertEqual(response.status_code, 200)
+def test_download_route(client):
+    client.post("/login", data={"username": "testuser", "password": "testpassword"})
+    response = client.get("/download")
+    assert response.status_code == 200
 
-    def test_logout_route(self):
-        response = self.client.get("/logout")
-        self.assertEqual(response.status_code, 200)
 
-    def test_translate_route(self):
-        self.client.post(
-            "/login", data={"username": "testuser", "password": "testpassword"}
-        )
-        response = self.client.get("/translate")
-        self.assertEqual(response.status_code, 200)
+def test_download_file_route(client):
+    client.post("/login", data={"username": "testuser", "password": "testpassword"})
 
-    def test_download_route(self):
-        self.client.post(
-            "/login", data={"username": "testuser", "password": "testpassword"}
-        )
-        response = self.client.get("/download")
-        self.assertEqual(response.status_code, 200)
-
-    def test_download_file_route(self):
-        self.client.post(
-            "/login", data={"username": "testuser", "password": "testpassword"}
-        )
-        filename = "example"
-        response = self.client.get(f"/download/{filename}")
-        self.assertEqual(response.status_code, 302)
+    filename = "example"
+    response = client.get(f"/download/{filename}")
+    assert response.status_code == 302
